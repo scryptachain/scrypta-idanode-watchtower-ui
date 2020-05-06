@@ -90,5 +90,6 @@
   }
   @media screen and (max-width:768px){
     .title{ font-size: 14px; }
+    .card {width:100%!important;; margin: 10px 0!important;}
   }
 </style> 

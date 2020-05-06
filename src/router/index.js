@@ -6,8 +6,13 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+    name: 'IdaNodes',
+    component: () => import(/* webpackChunkName: "idanodes" */ '../views/IdaNodes.vue')
+  },
+  {
+    path: '/planum',
+    name: 'Planum',
+    component: () => import(/* webpackChunkName: "planum" */ '../views/Planum.vue')
   }
 ]
 
