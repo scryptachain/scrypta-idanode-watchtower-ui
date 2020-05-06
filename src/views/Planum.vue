@@ -84,14 +84,14 @@
         for(let xxx in app.sidechains){
           let sidechain = app.sidechains[xxx].address
           if(app.sidechains[xxx].last_24 > 0){
-            console.log('CHECKING SIDECHAIN ' + sidechain)
+            // console.log('CHECKING SIDECHAIN ' + sidechain)
             const responses = {}
             app.sidechains[xxx].cap = '-'
             app.sidechains[xxx].burned = '-'
 
             for(let node in app.nodes){
               try{
-                console.log('CHECKING NODE ' + app.nodes[node])
+                // console.log('CHECKING NODE ' + app.nodes[node])
                 app.status[sidechain][app.nodes[node]] = 'CHECKING'
                 app.$forceUpdate();
                 let response = await axios.post(app.nodes[node] + '/sidechain/shares', {sidechain_address: sidechain})
@@ -99,7 +99,7 @@
                 app.status[sidechain][app.nodes[node]] = response.data.cap + ' ' + app.sidechains[xxx].genesis.symbol + ' | ' + response.data.burned + ' ' + app.sidechains[xxx].genesis.symbol
                 app.$forceUpdate();
               }catch(e){
-                console.log('NODE ' + app.nodes[node] + ' NOT AVAILABLE')
+                // console.log('NODE ' + app.nodes[node] + ' NOT AVAILABLE')
               }
             }
             let same = []
@@ -118,14 +118,14 @@
                 }
               }
             }
-            console.log(same.length + ' NODES ARE EQUALS, TOTAL CAP IS ' + same[0])
+            // console.log(same.length + ' NODES ARE EQUALS, TOTAL CAP IS ' + same[0])
             app.sidechains[xxx].cap = same[0]
             app.sidechains[xxx].burned = burned[0]
             let balances = {}
 
             for(let x in responses){
               for(let y in responses[x].shares){
-                //console.log('CHECKING ' + y + ' BALANCE: ' + responses[x].shares[y].balance)
+                //// console.log('CHECKING ' + y + ' BALANCE: ' + responses[x].shares[y].balance)
                 if(balances[y] === undefined){
                   balances[y] = [responses[x].shares[y].balance]
                 }else{
@@ -133,13 +133,13 @@
                   if(balances[y][lastindex] === responses[x].shares[y].balance){
                     balances[y].push(responses[x].shares[y].balance)
                   }else{
-                    console.log(y + ' BALANCE IS DIFFERENT ON NODE ' + x)
+                    // console.log(y + ' BALANCE IS DIFFERENT ON NODE ' + x)
                   }
                 }
               }
             }
             global['isChecking'] = false
-            console.log('CHECKING ENDED')
+            // console.log('CHECKING ENDED')
           }
         }
       }
