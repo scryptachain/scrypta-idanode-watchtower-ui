@@ -9,13 +9,6 @@
         </div>
         <footer class="card-footer">
           <p class="card-footer-item">
-            <a :href="node.url" target="_blank">
-              <span>
-                View page
-              </span>
-            </a>
-          </p>
-          <p class="card-footer-item">
             <span v-if="node.response.blocks === undefined">
               CHECKING
             </span>
@@ -27,6 +20,15 @@
                 OUT OF {{ node.response.toindex }} BLOCKS
               </span>
             </span>
+          </p>
+          <p class="card-footer-item">
+            <span>
+              v.{{ node.response.version }}
+            </span>
+          </p>
+          <p class="card-footer-item">
+            <span style="color:#f00" v-if="node.response.checksum !== checksums[node.response.version]">CORRUPTED</span>
+            <span v-if="node.response.checksum === checksums[node.response.version]">VERIFIED</span>
           </p>
         </footer>
       </div>
@@ -40,23 +42,31 @@
 
 <script>
   let ScryptaCore = require("@scrypta/core");
-
+  const axios = require('axios')
   export default {
     data() {
       return {
         scrypta: new ScryptaCore(true),
         nodes: [],
         isLoading: true,
+        axios: axios,
         sync: {},
-        blocks: {}
+        blocks: {},
+        checksums: {}
       };
     },
-    mounted() {
+    async mounted() {
       const app = this
       app.nodes = app.scrypta.returnNodes()
       for(let x in app.nodes){
         let node = app.nodes[x]
         app.sync[node] = 'CHECKING'
+      }
+      let checksums = await axios.get('https://raw.githubusercontent.com/scryptachain/scrypta-idanodejs/master/checksum')
+      let split = checksums.data.split("\n")
+      for(let x in split){
+        let checksum = split[x].split(':')
+        app.checksums[checksum[0]] = checksum[1]
       }
       app.checkNodes()
       setInterval(function() {

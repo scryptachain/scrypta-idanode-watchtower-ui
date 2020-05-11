@@ -13,6 +13,11 @@ const routes = [
     path: '/planum',
     name: 'Planum',
     component: () => import(/* webpackChunkName: "planum" */ '../views/Planum.vue')
+  },
+  {
+    path: '/rewards',
+    name: 'Rewards',
+    component: () => import(/* webpackChunkName: "rewards" */ '../views/Rewards.vue')
   }
 ]
 

@@ -1,49 +1,11 @@
 <template>
   <div class="home">
     <div v-if="!isLoading" style="width:100%;">
-      <div v-for="sidechain in sidechains" v-bind:key="sidechain.address" style="margin-bottom:15px">
-        <a :href="'https://chains.planum.dev/#/sidechain/' + sidechain.address" target="_blank">
-          <div class="card">
-            <div class="card-content">
-              <div class="media">
-              <div class="media-left">
-                <figure class="image gravatar is-128x128">
-                  <v-gravatar :email="sidechain.address" />
-                </figure>
-              </div>
-                <div class="media-content">
-                  <div class="columns">
-                    <div class="column">
-                      <p class="title is-4" style="margin:0">{{ sidechain.genesis.name }}</p>
-                      <p class="title is-5" style="margin-bottom:0">{{ sidechain.last_24 }} txs in the last 24h</p>
-                      <p class="title is-5" style="margin-bottom:0">{{ sidechain.cap }} {{ sidechain.genesis.symbol }} total CAP</p>
-                      <p class="title is-5">{{ sidechain.burned }} {{ sidechain.genesis.symbol }} total BURNED</p>
-                      <p class="subtitle is-6" style="margin-bottom:0">issued at <b style="color:#000">{{ sidechain.address }}</b></p>
-                    </div>
-                    <div class="column">
-                      <div style="font-size:14px;" v-for="node in nodes" v-bind:key="node">
-                        <div v-if="status[sidechain.address] !== undefined">
-                          <div v-if="status[sidechain.address][node] !== undefined">
-                            {{ node }}: {{ status[sidechain.address][node] }}
-                          </div>
-                          <div v-if="status[sidechain.address][node] === undefined">
-                            {{ node }}: CHECKING
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <pre v-if="errors[sidechain.address]">{{errors[sidechain.address]}}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
+      
     </div>
     <div v-if="isLoading" style="text-align:center; padding:25vh 0">
-      <img src="planum.png" width="100"><br><br>
-      Loading Planum Sidechains
+      <img src="logo.png" width="100"><br><br>
+      Loading IdaNodes Rewards
     </div>
   </div>
 </template>
