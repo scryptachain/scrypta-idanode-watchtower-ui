@@ -1,7 +1,72 @@
 <template>
   <div class="home">
     <div v-if="!isLoading" style="width:100%;">
-      
+      <div class="columns">
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <p class="title">
+                {{ Object.keys(stats.uptime).length }}
+              </p>
+              <p class="subtitle">
+                Total IdANodes
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <p class="title">
+                {{ stats.stake.toFixed(3) }} LYRA
+              </p>
+              <p class="subtitle">
+                Total stake
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <p class="title">
+                {{ 1440 - stats.timing }}
+              </p>
+              <p class="subtitle">
+                Minutes until next payout
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="columns">
+        <div class="column">
+          <div v-for="(uptime, node) in stats.uptime" v-bind:key="node" style="margin-bottom:15px">
+            <a :href="node" target="_blank">
+              <div class="card">
+                <div class="card-content">
+                  <div class="media">
+                  <div class="media-left">
+                    <figure class="image gravatar is-128x128">
+                      <v-gravatar :email="node" />
+                    </figure>
+                  </div>
+                    <div class="media-content">
+                      <div class="column">
+                        <p class="title is-4" style="margin:0">{{ node }}</p>
+                        <p class="title is-5" style="margin-bottom:0">{{ uptime }} minutes of uptime</p>
+                        <p class="title is-5" style="margin-bottom:0">{{ stats.shares[node] }} % of shares</p>
+                        <p class="title is-5">{{ stats.earnings[node] }} LYRA at next payout</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-if="isLoading" style="text-align:center; padding:25vh 0">
       <img src="logo.png" width="100"><br><br>
@@ -17,96 +82,24 @@
     data() {
       return {
         scrypta: new ScryptaCore(true),
-        nodes: [],
-        sidechains: [],
-        status: {},
+        stats: {},
         isLoading: true,
         errors: {}
       };
     },
     mounted() {
       const app = this
-      app.nodes = app.scrypta.returnNodes()
-      
-      app.fetchSidechains()
+      app.fetchStats()
       setInterval(function() {
-        // app.checkNodes()
-      }, 10000)
+        app.fetchStats()
+      }, 30000)
     },
     methods: {
-      async fetchSidechains(){
+      async fetchStats(){
         const app = this
-        let response = await app.scrypta.get('/sidechain/list')
-        for(let x in response.data){
-          let sidechain = response.data[x]
-          app.status[sidechain.address] = {}
-        }
-        app.sidechains = response.data
-        app.checkNodes()
+        let stats = await axios.get('https://pool.scryptachain.org/status')
+        app.stats = stats.data
         app.isLoading = false
-      },
-      async checkNodes(){
-        const app = this
-        for(let xxx in app.sidechains){
-          let sidechain = app.sidechains[xxx].address
-          // console.log('CHECKING SIDECHAIN ' + sidechain)
-          const responses = {}
-          app.sidechains[xxx].cap = '-'
-          app.sidechains[xxx].burned = '-'
-
-          for(let node in app.nodes){
-            try{
-              // console.log('CHECKING NODE ' + app.nodes[node])
-              app.status[sidechain][app.nodes[node]] = 'CHECKING'
-              app.errors[sidechain] = ''
-              app.$forceUpdate();
-              let response = await axios.post(app.nodes[node] + '/sidechain/shares', {sidechain_address: sidechain})
-              responses[app.nodes[node]] = response.data
-              app.status[sidechain][app.nodes[node]] = response.data.cap + ' ' + app.sidechains[xxx].genesis.symbol + ' | ' + response.data.burned + ' ' + app.sidechains[xxx].genesis.symbol
-              app.$forceUpdate();
-            }catch(e){
-              // console.log('NODE ' + app.nodes[node] + ' NOT AVAILABLE')
-            }
-          }
-          let same = []
-          let burned = []
-          let difference = []
-          for(let x in responses){
-            if(same.length === 0){
-              same.push(responses[x].cap)
-            }else{
-              let lastindex = same.length - 1
-              if(same[lastindex] === responses[x].cap){
-                same.push(responses[x].cap)
-                burned.push(responses[x].burned)
-              }else{
-                difference.push(x)
-              }
-            }
-          }
-          // console.log(same.length + ' NODES ARE EQUALS, TOTAL CAP IS ' + same[0])
-          app.sidechains[xxx].cap = same[0]
-          app.sidechains[xxx].burned = burned[0]
-          let balances = {}
-
-          for(let x in responses){
-            for(let y in responses[x].shares){
-              //// console.log('CHECKING ' + y + ' BALANCE: ' + responses[x].shares[y].balance)
-              if(balances[y] === undefined){
-                balances[y] = [responses[x].shares[y].balance]
-              }else{
-                let lastindex =  balances[y].length - 1
-                if(balances[y][lastindex] === responses[x].shares[y].balance){
-                  balances[y].push(responses[x].shares[y].balance)
-                }else{
-                  app.errors[sidechain] += y + ' BALANCE IS DIFFERENT ON NODE ' + x + "\n"
-                }
-              }
-            }
-          }
-          global['isChecking'] = false
-          // console.log('CHECKING ENDED')
-        }
       }
     }
   };

@@ -9,7 +9,7 @@
         <template slot="start">
           <b-navbar-item href="/#/">IdaNode network</b-navbar-item>
           <b-navbar-item href="/#/planum">Planum sidechains</b-navbar-item>
-          <!--<b-navbar-item href="/#/rewards">IdaNode Rewards</b-navbar-item>-->
+          <b-navbar-item href="/#/rewards">IdaNode Rewards</b-navbar-item>
         </template>
       </b-navbar>
       <router-view />
