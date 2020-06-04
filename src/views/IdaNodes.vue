@@ -57,7 +57,7 @@
     },
     async mounted() {
       const app = this
-      app.nodes = app.scrypta.returnNodes()
+      app.nodes = await app.scrypta.returnNodes()
       for(let x in app.nodes){
         let node = app.nodes[x]
         app.sync[node] = 'CHECKING'
