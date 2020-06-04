@@ -62,9 +62,9 @@
         errors: {}
       };
     },
-    mounted() {
+    async mounted() {
       const app = this
-      app.nodes = app.scrypta.returnNodes()
+      app.nodes = await app.scrypta.returnNodes()
       
       app.fetchSidechains()
       setInterval(function() {
