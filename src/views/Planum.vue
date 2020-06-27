@@ -98,10 +98,12 @@
               app.status[sidechain][app.nodes[node]] = 'CHECKING'
               app.errors[sidechain] = ''
               app.$forceUpdate();
-              let response = await axios.post(app.nodes[node] + '/sidechain/shares', {sidechain_address: sidechain})
-              responses[app.nodes[node]] = response.data
-              app.status[sidechain][app.nodes[node]] = response.data.cap + ' ' + app.sidechains[xxx].genesis.symbol + ' | ' + response.data.burned + ' ' + app.sidechains[xxx].genesis.symbol
-              app.$forceUpdate();
+              let response = await axios.post(app.nodes[node] + '/sidechain/shares', {sidechain_address: sidechain}, {timeout: 5000})
+              if(response.data !== undefined){
+                responses[app.nodes[node]] = response.data
+                app.status[sidechain][app.nodes[node]] = response.data.cap + ' ' + app.sidechains[xxx].genesis.symbol + ' | ' + response.data.burned + ' ' + app.sidechains[xxx].genesis.symbol
+                app.$forceUpdate()
+              }
             }catch(e){
               // console.log('NODE ' + app.nodes[node] + ' NOT AVAILABLE')
             }

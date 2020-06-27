@@ -84,7 +84,7 @@
           }
           app.$forceUpdate();
           let response = await app.scrypta.get('/wallet/getinfo', node)
-          if(response.toindex !== undefined){
+          if(response !== false && response.toindex !== undefined){
             app.sync[node].response = response
           }
         }
