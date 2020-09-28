@@ -68,9 +68,6 @@ export default {
   },
   async mounted() {
     const app = this;
-    app.scrypta.staticnodes = true
-    app.scrypta.mainnetIdaNodes.push("http://46.101.247.193:3001");
-    app.scrypta.mainnetIdaNodes.push("http://164.90.219.213:3001");
     app.nodes = await app.scrypta.returnNodes();
     for (let x in app.nodes) {
       let node = app.nodes[x];
