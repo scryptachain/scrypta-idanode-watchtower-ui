@@ -1,6 +1,6 @@
 const express = require('express')
 const daemon = express()
-const port = 8888
+const port = 8866
 const fs = require('fs')
 const { app, Menu, Tray } = require('electron')
 
