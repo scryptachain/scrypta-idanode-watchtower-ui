@@ -71,8 +71,14 @@ export default {
     app.nodes = await app.scrypta.returnNodes();
     for (let x in app.nodes) {
       let node = app.nodes[x];
-      app.sync[node] = "CHECKING";
+      app.sync[node] = {};
+      app.sync[node].response = {};
+      app.sync[node].url = node;
+      app.sync[node].response.blocks = "CHECKING";
+      app.sync[node].response.toindex = "CHECKING";
+      app.sync[node].response.version = "CHECKING";
     }
+    app.isLoading = false
     let checksums = await axios.get(
       "https://raw.githubusercontent.com/scryptachain/scrypta-idanodejs/master/checksum"
     );

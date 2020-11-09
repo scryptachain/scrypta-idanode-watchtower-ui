@@ -53,7 +53,7 @@
                     </figure>
                   </div>
                     <div class="media-content">
-                      <div class="column">
+                      <div class="column" style="text-align:left!important">
                         <p class="title is-4" style="margin:0">{{ node }}</p>
                         <p class="title is-5" style="margin-bottom:0">{{ uptime }} minutes of uptime</p>
                         <p class="title is-5" style="margin-bottom:0">{{ stats.shares[node] }} % of shares</p>
