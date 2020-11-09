@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="planum">
     <div v-if="!isLoading" style="width: 100%">
       <div
         v-for="sidechain in sidechains"
@@ -209,7 +209,10 @@ export default {
 };
 </script>
 <style>
-.home {
+.planum .card * {
+  text-align: left!important;
+}
+.home, .planum {
   padding: 20px;
 }
 @media screen and (max-width: 768px) {
